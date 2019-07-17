@@ -3,14 +3,8 @@ import urllib.request
 from urllib.parse import quote
 import re
 
-MINLEVEL = 7
+MINWORDLEVEL = 7
 
-def readWordsFromDeck():
-    list = [re.findall(r'(?<=\「).+?(?=\」)',line)
-            for line in open('deck.txt',encoding='utf-8')]
-    for e in list:
-        print(e[0])
-    
 def filterWordsFromDeck() -> None:
     with open('deck.txt','r+',encoding='utf-8') as f:
         lines = f.readlines()
@@ -43,7 +37,7 @@ def getWordLevelFromKan(word: str) -> int:
     return level
 
 def isLowerThanMinLevel(wordLevel: int) -> bool:
-    if wordLevel < MINLEVEL:
+    if wordLevel < MINWORDLEVEL:
         return True
     else:
         return False
