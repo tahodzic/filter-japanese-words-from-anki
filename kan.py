@@ -3,6 +3,8 @@ import urllib.request
 from urllib.parse import quote
 import re
 
+MINLEVEL = 7
+
 def readWordsFromDeck():
     list = [re.findall(r'(?<=\「).+?(?=\」)',line)
             for line in open('deck.txt',encoding='utf-8')]
@@ -20,33 +22,31 @@ def filterWordsFromDeck() -> None:
             if match is None:
                 continue
             print("Checking word: ", match[0]," . Result:", end=" ")
-            if not getWordLevelFromKan(match[0]):
+            if isLowerThanMinLevel(getWordLevelFromKan(match[0])):
                 f.write(line)
+                print("keep")
+            else:
+                print("delete")
         f.truncate()
     
-    
-def getWordLevelFromKan(word: str) -> bool:
+def getWordLevelFromKan(word: str) -> int:
     kan_url = "https://www.kanshudo.com/word/" + quote(word)
     kan_page = urllib.request.urlopen(kan_url).read()
     soup = BeautifulSoup(kan_page,'html.parser')
-
     child = soup.find(href='/howto/usefulness')
     try:
         parent = child.find_parent("div")
         level = int(parent.contents[2][2]+parent.contents[2][3])
     except:
         print("revision needed")
-        return False
-        
-    if level < 8:
-        print("keep. Level: "+str(level))
-        return False
-    else:
-        print("delete. Level: "+str(level))
-        return True
+        return -1
+    return level
 
-def isHigherThanLevel(wordLevel: int) -> bool:
-    if
+def isLowerThanMinLevel(wordLevel: int) -> bool:
+    if wordLevel < MINLEVEL:
+        return True
+    else:
+        return False
 
 def main():
     filterWordsFromDeck()
