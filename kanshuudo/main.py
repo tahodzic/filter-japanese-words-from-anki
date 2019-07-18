@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import urllib.request
 from urllib.parse import quote
 import re
+import pytest
 
 MINWORDLEVEL = 7
 
@@ -41,6 +42,12 @@ def isLowerThanMinLevel(wordLevel: int) -> bool:
         return True
     else:
         return False
+
+def test_wordLevelLowerThanMinLevel():
+    assert isLowerThanMinLevel(1) == True
+
+def test_wordLevelHigherThanMinLevel():
+    assert isLowerThanMinLevel(8) == False
 
 def main():
     filterWordsFromDeck()
